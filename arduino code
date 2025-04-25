@@ -1,1 +1,58 @@
 //code here
+#define red 7
+#define grn 6
+#define yel 4
+#define relay 5
+#define moist A0
+#define level A1
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(grn, OUTPUT);
+  pinMode(red, OUTPUT);
+  pinMode(yel, OUTPUT);
+  pinMode(relay, OUTPUT);
+  digitalWrite(grn, LOW);
+  digitalWrite(yel, LOW);
+  digitalWrite(red, LOW);
+  digitalWrite(relay, LOW);
+}
+
+void loop() {
+  Serial.print("Moisture Value: ");
+  Serial.println(mreadSensor());
+
+	Serial.print("Water level: ");
+	Serial.println(lreadSensor());
+
+  delay(250);
+}
+
+int mreadSensor() {
+  int msensorValue = analogRead(moist);  
+  int outputValue = map(msensorValue, 0, 1023, 255, 0);
+
+  if (outputValue <= 20) {
+    digitalWrite(relay, HIGH);
+    digitalWrite(red, HIGH); 
+    digitalWrite(grn, LOW); 
+  } else {
+    digitalWrite(relay, LOW);
+    digitalWrite(red, LOW);
+    digitalWrite(grn, HIGH); 
+  }
+  return outputValue;         
+}
+
+int lreadSensor() {
+  int lsensorValue = analogRead(level);  
+  int outputValue = map(lsensorValue, 0, 1023, 255, 0);
+
+  if (lsensorValue <= 450) {
+    digitalWrite(yel, HIGH);  
+  } else {
+    digitalWrite(yel, LOW);
+  }
+	int val = analogRead(level);
+	return val;
+}
